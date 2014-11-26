@@ -274,6 +274,7 @@ SiPixelDigitizerAlgorithm::SiPixelDigitizerAlgorithm(const edm::ParameterSet& co
   // Add pixel radiation damage for upgrade studies
   AddPixelAging(conf.getParameter<bool>("DoPixelAging")),
   UseTemplateAgeing(conf.exists("UseTemplateAgeing")?conf.getParameter<bool>("UseTemplateAgeing"):false),
+  TemplateAgeingIrradiated(conf.exists("TemplateAgeingIrradiated")?conf.getParameter<bool>("TemplateAgeingIrradiated"):false),
   // delta cutoff in MeV, has to be same as in OSCAR(0.030/cmsim=1.0 MeV
   //tMax(0.030), // In MeV.
   //tMax(conf.getUntrackedParameter<double>("DeltaProductionCut",0.030)),
@@ -879,8 +880,8 @@ void SiPixelDigitizerAlgorithm::hitSignalReweight(const PSimHit& hit,
     std::cout << std::endl;
   }
   //for unirradiated: 2nd argument is ID0, for irradiated: ID1
-  ierr = PixelTempRewgt2D(ID0, ID1, track, pixrewgt, ydouble, xdouble, templ2D);
- 
+  if (TemplateAgeingIrradiated == true) ierr = PixelTempRewgt2D(ID0, ID1, track, pixrewgt, ydouble, xdouble, templ2D);
+  else ierr = PixelTempRewgt2D(ID0, ID0, track, pixrewgt, ydouble, xdouble, templ2D);
   std::cout << "Template after reweighting: " << std::endl;
   
   for(int col = 0; col < TYSIZE; ++col) {

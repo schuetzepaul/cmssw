@@ -374,6 +374,7 @@ class SiPixelDigitizerAlgorithm  {
     // pixel aging
     const bool AddPixelAging;
     const bool UseTemplateAgeing;
+    const bool TemplateAgeingIrradiated;
     // The PDTable
     //HepPDTable *particleTable;
     //ParticleDataTable *particleTable;

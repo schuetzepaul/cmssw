@@ -481,7 +481,7 @@ bool SiPixelTemplate2D::xytemp(int id, float cotalpha, float cotbeta, float locB
 	
 #ifndef SI_PIXEL_TEMPLATE_STANDALONE
 	if(index_id_ < 0 || index_id_ >= (int)thePixelTemp_.size()) {
-		throw cms::Exception("DataCorrupt") << "SiPixelTemplate2D::interpolate can't find the fucking needed template ID = " << id 
+		throw cms::Exception("DataCorrupt") << "SiPixelTemplate2D::interpolate can't find the needed template ID = " << id 
 		<< ", Are you using the correct global tag?" << std::endl;
 	}
 #else
