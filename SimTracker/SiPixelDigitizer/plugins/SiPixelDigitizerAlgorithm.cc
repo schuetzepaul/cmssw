@@ -146,18 +146,20 @@ void SiPixelDigitizerAlgorithm::init(const edm::EventSetup& es) {
   es.get<TrackerDigiGeometryRecord>().get(geom_);
 
   //Radiation Damage Sim with Templates
-  ID0 = 28; ID1 = 26;
-
-  //get the 2Dtemplates via DB objects
-  edm::ESHandle<SiPixel2DTemplateDBObject> SiPixel2DTemp;
-  es.get<SiPixel2DTemplateDBObjectRcd>().get(SiPixel2DTemp);
-  SiPixel2DTemplateDBObject dbobject = *SiPixel2DTemp.product();
-  templ2D.pushfile(dbobject);
-
-  //templ2D.pushfile(ID0);
-  //templ2D.pushfile(ID1);
- 
-  //END Radiation Damage Sim with Templates
+  if (UseTemplateAgeing){
+    ID0 = 28; 
+    ID1 = 26;
+    
+    //get the 2Dtemplates via DB objects
+    edm::ESHandle<SiPixel2DTemplateDBObject> SiPixel2DTemp;
+    es.get<SiPixel2DTemplateDBObjectRcd>().get(SiPixel2DTemp);
+    SiPixel2DTemplateDBObject dbobject = *SiPixel2DTemp.product();
+    templ2D.pushfile(dbobject);
+    
+    //templ2D.pushfile(ID0);
+    //templ2D.pushfile(ID1);
+    
+  } //END Radiation Damage Sim with Templates
 }
 
 //=========================================================================
@@ -967,7 +969,6 @@ void SiPixelDigitizerAlgorithm::calculateInstlumiFactor(PileupMixingContent* puI
     const std::vector<float> TrueInteractionList = puInfo->getMix_TrueInteractions();      
     const int bunchSpacing = puInfo->getMix_bunchSpacing();
     double bunchScale=1.0;
-
     if (bunchSpacing==25) bunchScale=bunchScaleAt25;
 
     int pui = 0, p = 0;

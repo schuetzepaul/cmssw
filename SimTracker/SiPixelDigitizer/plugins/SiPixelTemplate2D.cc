@@ -255,6 +255,7 @@ bool SiPixelTemplate2D::pushfile(const SiPixel2DTemplateDBObject& dbobject)
 		// Read-in a header string first and print it    
 	 
 		SiPixel2DTemplateDBObject::char2float temp;
+	
 		for (i=0; i<20; ++i) {
 			temp.f = db.sVector()[db.index()];
 			theCurrentTemp.head.title[4*i] = temp.c[0];
@@ -273,7 +274,7 @@ bool SiPixelTemplate2D::pushfile(const SiPixel2DTemplateDBObject& dbobject)
 		>> theCurrentTemp.head.s50 >> theCurrentTemp.head.lorywidth >> theCurrentTemp.head.lorxwidth >> theCurrentTemp.head.ysize >> theCurrentTemp.head.xsize >> theCurrentTemp.head.zsize;
 		
 		if(db.fail()) {LOGERROR("SiPixelTemplate2D") << "Error reading file, no template load" << ENDL; return false;}
-		
+	
 		LOGINFO("SiPixelTemplate2D") << "Template ID = " << theCurrentTemp.head.ID << ", Template Version " << theCurrentTemp.head.templ_version << ", Bfield = " << theCurrentTemp.head.Bfield 
 		<< ", NTy = " << theCurrentTemp.head.NTy << ", NTyx = " << theCurrentTemp.head.NTyx<< ", NTxx = " << theCurrentTemp.head.NTxx << ", Dtype = " << theCurrentTemp.head.Dtype
 		<< ", Bias voltage " << theCurrentTemp.head.Vbias << ", temperature "
@@ -366,14 +367,13 @@ bool SiPixelTemplate2D::pushfile(const SiPixel2DTemplateDBObject& dbobject)
 					
 				}
 			}
-			
+		thePixelTemp_.push_back(theCurrentTemp); //FIXED!! wasn't in the for loop, only 1 template was stored			
 		}
 		
 				
 // Add this template to the store
 		
-		thePixelTemp_.push_back(theCurrentTemp);
-		
+	
 	return true;
 	
 } // TempInit 
@@ -482,7 +482,7 @@ bool SiPixelTemplate2D::xytemp(int id, float cotalpha, float cotbeta, float locB
 #ifndef SI_PIXEL_TEMPLATE_STANDALONE
 	if(index_id_ < 0 || index_id_ >= (int)thePixelTemp_.size()) {
 		throw cms::Exception("DataCorrupt") << "SiPixelTemplate2D::interpolate can't find the needed template ID = " << id 
-		<< ", Are you using the correct global tag?" << std::endl;
+						    << ", Are you using the correct global tag? " << (int)thePixelTemp_.size()  << std::endl;
 	}
 #else
 	assert(index_id_ >= 0 && index_id_ < (int)thePixelTemp_.size());
