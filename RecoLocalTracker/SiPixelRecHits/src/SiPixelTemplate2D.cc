@@ -146,7 +146,7 @@ bool SiPixelTemplate2D::pushfile(int filenum, std::vector< SiPixelTemplateStore2
       if(theCurrentTemp.head.NTy != 0) {LOGERROR("SiPixelTemplate2D") << "Trying to load 1-d template info into the 2-d template object, check your DB/global tag!" << ENDL; return false;}
       
       
-#ifdef SI_PIXEL_TEMPLATE_USE_BOOST
+#ifdef SI_PIXEL_TEMPLATE2D_USE_BOOST
       
       // next, layout the 2-d structure needed to store template
       
@@ -342,9 +342,8 @@ bool SiPixelTemplate2D::pushfile(const SiPixel2DTemplateDBObject& dbobject, std:
       
       if(theCurrentTemp.head.NTy != 0) {LOGERROR("SiPixelTemplate2D") << "Trying to load 1-d template info into the 2-d template object, check your DB/global tag!" << ENDL; return false;}
       
-#ifdef SI_PIXEL_TEMPLATE_USE_BOOST
+#ifdef SI_PIXEL_TEMPLATE2D_USE_BOOST
       // next, layout the 2-d structure needed to store template
-      
       theCurrentTemp.entry.resize(boost::extents[theCurrentTemp.head.NTyx][theCurrentTemp.head.NTxx]);
 #endif
       

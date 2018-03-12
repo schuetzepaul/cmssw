@@ -100,7 +100,7 @@ struct SiPixelTemplateHeader2D {           //!< template header structure
 
 struct SiPixelTemplateStore2D { //!< template storage structure
    SiPixelTemplateHeader2D head;
-#ifndef SI_PIXEL_TEMPLATE_USE_BOOST
+#ifndef SI_PIXEL_TEMPLATE2D_USE_BOOST
    SiPixelTemplateEntry2D entry[73][7];  //!< use 2d entry to store [47][5] barrel entries or [5][9] fpix
 #else
    boost::multi_array<SiPixelTemplateEntry2D,2> entry;  //!< use 2d entry to store [47][5] barrel entries or [5][9] fpix entries

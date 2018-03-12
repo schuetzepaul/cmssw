@@ -17,6 +17,7 @@
 // It adds real time re-sizing and bounds checking at a cost in time (10%?).
 
 //#define SI_PIXEL_TEMPLATE_USE_BOOST 1
+#define SI_PIXEL_TEMPLATE2D_USE_BOOST 1
 
 #define TYSIZE 21
 #define THY 10 // = TYSIZE/2
