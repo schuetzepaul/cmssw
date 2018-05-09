@@ -591,11 +591,6 @@ bool SiPixelTemplate2D::interpolate(int id, float cotalpha, float cotbeta, float
       if(dcota > 0.f) {jx1_ = jx0_ + 1;if(jx1_ > Nxx_-1) jx1_ = jx0_-1;} else {jx1_ = jx0_ - 1; if(jx1_ < 0) jx1_ = jx0_+1;}
    }
 
-   if(cota < cotalpha0_ || cota > cotalpha1_) {
-     std::cout << "Alpha doesn't match: " << std::endl;
-     std::cout << cota << "  " << cotalpha0_ << "  " << cotalpha1_ << std::endl;
-   }
-
    // Interpolate the absolute value of cot(beta)
    
    acotb = fabs(cotbeta);
@@ -617,11 +612,6 @@ bool SiPixelTemplate2D::interpolate(int id, float cotalpha, float cotbeta, float
       if(dcotb > 0.f) {iy1_ = iy0_ + 1; if(iy1_ > Nyx_-1) iy1_ = iy0_-1;} else {iy1_ = iy0_ - 1; if(iy1_ < 0) iy1_ = iy0_+1;}
    }
 
-   if(acotb < cotbeta0_ || acotb > cotbeta1_) {
-     std::cout << "Beta doesn't match: " << std::endl;
-     std::cout << cotbeta << "  " << cotbeta0_ << "  " << cotbeta1_ << std::endl;
-   }
-   
    //  Calculate signed quantities
    
    lorydrift_ = lorywidth_/2.;
