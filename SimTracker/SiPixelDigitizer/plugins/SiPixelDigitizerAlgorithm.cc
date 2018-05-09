@@ -2337,6 +2337,7 @@ int SiPixelDigitizerAlgorithm::PixelTempRewgt2D(int id_in, int id_rewgt, array_2
   if(!templ2D.xytemp(id_in, cotalpha, cotbeta, xhit2D, yhit2D, ydouble, xdouble, xy_in)) {success = 1;}
   if(success != 0){
     LogWarning ("Pixel Digitizer") << "No matching template found" << std::endl;
+    return 2;
   }
 
   if(PrintTemplates){
