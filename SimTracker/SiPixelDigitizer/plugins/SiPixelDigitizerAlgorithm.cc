@@ -127,7 +127,12 @@ void SiPixelDigitizerAlgorithm::init(const edm::EventSetup& es) {
   es.get<SiPixelFedCablingMapRcd>().get(map_);
   es.get<TrackerDigiGeometryRecord>().get(geom_);
 
-  // Read template files for charge reweighting
+  if(UseReweighting){
+    std::cout << "Reweighting: On" << std::endl;
+  }else{
+    std::cout << "Reweighting: Off" << std::endl;
+  }
+  // Read template files for charge reweighting, if the detector is not Phase 1
   if (UseReweighting){
     edm::ESHandle<SiPixel2DTemplateDBObject> SiPixel2DTemp_den;
     es.get<SiPixel2DTemplateDBObjectRcd>().get("denominator",SiPixel2DTemp_den);
@@ -2220,12 +2225,20 @@ bool SiPixelDigitizerAlgorithm::hitSignalReweight(const PSimHit& hit,
   << "Entry - X Pixel: " << hitEntryPointPixel.x() << " Y Pixel: " << hitEntryPointPixel.y() << "\n"
   << "Exit - X Pixel: " << hitExitPointPixel.x() << " Y Pixel: " << hitExitPointPixel.y() << "\n"
   
-  << "row min: " << irow_min << " col min: " << icol_min << "\n";
+  << "row min: " << irow_min << " col min: " << icol_min << "\n"
+  << "row max: " << irow_max << " col max: " << icol_max << "\n";
 #endif
 
   if(!(irow_min<=hitrow_max && irow_max>=hitrow_min && icol_min<=hitcol_max && icol_max>=hitcol_min)){
     // The clusters do not have an overlap, hence the hit is NOT reweighted
-    return false;
+    if(processType==0){
+      //std::cout << "I'm a too far away primary - wait what!?" << std::endl;
+      //std::cout << "row min: " << irow_min << " col min: " << icol_min << "\n" << "row max: " << irow_max << " col max: " << icol_max << "\n" << "hitrow_min: " << hitrow_min << " hitcol_min: " << hitcol_min << "\n" << "hitrow_max: " << hitrow_max << " hitcol_max: " << hitcol_max << std::endl;
+      return false;
+    }else{
+      //std::cout << "I'm a too far away secondary" << std::endl;
+      return false;
+    }
   }
 
   
@@ -2275,6 +2288,7 @@ bool SiPixelDigitizerAlgorithm::hitSignalReweight(const PSimHit& hit,
     int ID0 = dbobject_den->getTemplateID(detID);
 
     if(ID0==ID1){
+      std::cout << "No re-weighting? Fine by me." << std::endl;
       return false;
     }
     ierr = PixelTempRewgt2D(ID0, ID1, pixrewgt);
@@ -2286,6 +2300,7 @@ bool SiPixelDigitizerAlgorithm::hitSignalReweight(const PSimHit& hit,
 #ifdef TP_DEBUG 
     LogDebug ("PixelDigitizer ") << "Cluster Charge Reweighting did not work properly.";
 #endif
+    //std::cout << "Cluster Charge Reweighting did not work properly." << std::endl;
     return false;
   }
   
@@ -2306,9 +2321,13 @@ bool SiPixelDigitizerAlgorithm::hitSignalReweight(const PSimHit& hit,
   }
 
   if(chargeBefore!=0. && chargeAfter==0.){
+    std::cout << "I lost all charge. Before: " << chargeBefore << std::endl;
     return false;
   }
-  
+
+  //std::cout << std::endl;
+  //std::cout << "Charges (before->after): " << chargeBefore << " -> " << chargeAfter << std::endl;
+  //std::cout << "Charge loss: " << (1 - chargeAfter/chargeBefore)*100 << " %" << std::endl << std::endl;
   if(PrintClusters){
     std::cout << std::endl;
     std::cout << "Charges (before->after): " << chargeBefore << " -> " << chargeAfter << std::endl;
@@ -2355,6 +2374,7 @@ int SiPixelDigitizerAlgorithm::PixelTempRewgt2D(int id_in, int id_rewgt, array_2
     cotbeta = track[4]/track[5];
   } else {
     LogDebug ("Pixel Digitizer") << "Reweighting angle is not good!" << std::endl;
+    std::cout << "Reweighting angle is not good!" << std::endl;
     return 9; //returned value here indicates that no reweighting was done in this case
   }
 
